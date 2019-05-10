@@ -48,3 +48,4 @@ gem 'sidekiq' #For background jobs
 
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
+gem 'swagger-blocks'
