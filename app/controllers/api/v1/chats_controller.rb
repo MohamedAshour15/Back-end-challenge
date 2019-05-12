@@ -4,8 +4,7 @@ class Api::V1::ChatsController < ApplicationController
 
   def create
     chat = Chat.new(chat_params)
-    chat_number = Rails.cache.redis.incr("#{params[:chat_application_token]}_chat_number")
-    chat.number = chat_number
+    chat.number = Rails.cache.redis.incr("#{params[:chat_application_token]}_chat_number")
     if (chat_application = ChatApplication.find_by_token(params[:chat_application_token]))
       chat.chat_application_id = chat_application.id
     else
