@@ -1,6 +1,7 @@
 class Message < ApplicationRecord
   include Searchable
   belongs_to :chat
+  after_create :update_messages_count
 
   settings index: { number_of_shards: 1 } do
     mapping dynamic: 'false' do
@@ -34,5 +35,9 @@ class Message < ApplicationRecord
         }
       }
       }).records
+  end
+
+  def update_messages_count
+    Sidekiq::Client.enqueue_to('low', MessageWorker, self.chat_application_token, self.chat_number)
   end
 end
