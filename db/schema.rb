@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 2019_05_10_005115) do
     t.string "chat_application_token"
     t.integer "messages_count", default: 0
     t.index ["chat_application_id"], name: "index_chats_on_chat_application_id"
-    t.index ["chat_application_token", "number"], name: "index_chats_on_chat_application_token_and_number"
+    t.index ["chat_application_token", "number"], name: "index_chats_on_chat_application_token_and_number", unique: true
   end
 
   create_table "messages", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -39,8 +39,9 @@ ActiveRecord::Schema.define(version: 2019_05_10_005115) do
     t.datetime "updated_at", null: false
     t.bigint "chat_id"
     t.integer "chat_number"
+    t.string "chat_application_token"
     t.index ["chat_id"], name: "index_messages_on_chat_id"
-    t.index ["chat_number", "number"], name: "index_messages_on_chat_number_and_number"
+    t.index ["chat_number", "number", "chat_application_token"], name: "message_index", unique: true
   end
 
   add_foreign_key "chats", "chat_applications"

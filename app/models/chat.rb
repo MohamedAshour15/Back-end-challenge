@@ -11,6 +11,6 @@ class Chat < ApplicationRecord
   end
 
   def update_chat_application_count
-    Sidekiq::Client.enqueue_to_in('default', 15.minutes.from_now, ChatWorker, self.chat_application_id)
+    Sidekiq::Client.enqueue_to_in('low', 15.minutes.from_now, ChatWorker, self.chat_application_token)
   end
 end
