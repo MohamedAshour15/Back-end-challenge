@@ -16,9 +16,11 @@ class Api::V1::MessagesController < ApplicationController
 
   def index
     if params[:query].nil?
-      json_response(Message.joins(:chat).where('chats.number = ?', params[:chat_number]).as_json)
+      json_response(Message.where(chat_number: params[:chat_number], chat_application_token: params[:chat_application_token]).
+        order('number ASC').as_json)
     else
-      json_response(Message.joins(:chat).where('chats.number = ?', params[:chat_number]).search(params[:query]).as_json)
+      json_response(Message.where(chat_number: params[:chat_number], chat_application_token: params[:chat_application_token]).
+        order('number ASC').search(params[:query]).as_json)
     end
   end
 

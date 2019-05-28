@@ -40,6 +40,6 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   # Config for redis server
-  config.cache_store = :redis_cache_store, { url: 'redis://localhost:6379/0' }
+  config.cache_store = :redis_cache_store, { url: 'redis://redis:6379/0' }
   config.action_controller.perform_caching = true
 end

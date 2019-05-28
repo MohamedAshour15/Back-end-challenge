@@ -7,6 +7,22 @@ services:
       MYSQL_DATABASE: db
     volumes:
       - ./db:/var/lib/mysql
+  redis:
+    image: redis
+    command: redis-server
+  elasticsearch:
+    image: elasticsearch:6.5.1
+    ports:
+      - "9200:9200"
+  sidekiq:
+    build: .
+    image: sidekiq:5.2.7
+    command: bundle exec sidekiq
+    volumes:
+      - .:/myapp
+    depends_on:
+      - db
+      - redis
   web:
     build: .
     command:  bash -c "rm -f tmp/pids/server.pid && ./init.sh"
@@ -16,5 +32,10 @@ services:
      - "3000:3000"
     depends_on:
       - db
+      - elasticsearch
+      - sidekiq
+
+
+
 
 
