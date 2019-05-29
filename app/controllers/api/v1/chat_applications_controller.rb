@@ -84,11 +84,7 @@ class Api::V1::ChatApplicationsController < ApplicationController
   end
 
   def show
-    if @chat_application.blank?
-      render status: :not_found
-    else
-      json_response @chat_application.as_json
-    end
+    json_response(@chat_application.as_json)
   end
 
   private
@@ -98,6 +94,8 @@ class Api::V1::ChatApplicationsController < ApplicationController
   end
 
   def set_chat_application
-    @chat_application = ChatApplication.find_by(token: params[:token])
+    if (@chat_application = ChatApplication.find_by(token: params[:token])).blank?
+      json_response({error: "ChatApplication not found"}, :not_found)
+    end
   end
 end

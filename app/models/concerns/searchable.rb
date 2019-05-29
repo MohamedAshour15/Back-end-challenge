@@ -20,10 +20,19 @@ module Searchable
     include Elasticsearch::Model
     include Elasticsearch::Model::Callbacks
 
-    after_commit :index_document, if: :persisted?
-    after_commit on: [:destroy] do
-      __elasticsearch__.delete_document
-    end
+    # after_commit :index_document, if: :persisted?
+    
+    # after_commit on: [:destroy] do
+    #   __elasticsearch__.delete_document
+    # end
+
+    # after_commit on: [:create] do
+    #   __elasticsearch__.index_document
+    # end
+
+    # after_commit on: [:update] do
+    #   __elasticsearch__.index_document
+    # end
 
     settings analysis: {
       filter: {
