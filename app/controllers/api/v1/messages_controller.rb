@@ -25,7 +25,7 @@ class Api::V1::MessagesController < ApplicationController
   end
 
   def update
-    if @message && params[:body].present?
+    if params[:body].present?
       Sidekiq::Client.enqueue_to('high', MessageCreateOrUpdateWorker, params[:chat_application_token], params[:chat_number],
           params[:number], 'update', params[:body])
       render status: :ok
@@ -33,18 +33,16 @@ class Api::V1::MessagesController < ApplicationController
   end
 
   def show
-    if @message
-      json_response({number: @message.as_json})
-    else
-      json_response({error: 'Record not found'}, :not_found)
-    end
+    json_response({number: @message.as_json})
   end
 
   private
 
   def set_message
-    @message =  Message.find_by(chat_application_token: params[:chat_application_token],
-        chat_number: params[:chat_number], number: params[:number])
+    if (@message =  Message.find_by(chat_application_token: params[:chat_application_token],
+        chat_number: params[:chat_number], number: params[:number])).blank?
+      json_response({error: 'Record not found'}, :not_found)
+    end
   end
 
   def message_params

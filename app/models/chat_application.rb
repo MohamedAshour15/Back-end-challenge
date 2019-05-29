@@ -1,7 +1,10 @@
 class ChatApplication < ApplicationRecord  
   has_secure_token 
-  has_many :chats, dependent: :destroy
+  has_many :chats, foreign_key: 'chat_application_token', dependent: :destroy
   validates :name, presence: true
+
+  self.primary_key = "token"
+
 
   swagger_schema :create_chat_application do
     key :required, [:name]
