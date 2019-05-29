@@ -40,8 +40,4 @@ class Message < ApplicationRecord
   def update_messages_count
     Sidekiq::Client.enqueue_to('low', MessageWorker, self.chat_application_token, self.chat_number)
   end
-
-  def chat
-    Chat.find_by(chat_application_token: self.chat_application_token, number: self.chat_number)
-  end
 end
