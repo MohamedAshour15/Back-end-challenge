@@ -67,7 +67,7 @@ class Api::V1::ChatApplicationsController < ApplicationController
     if chat_application.save
       json_response(chat_application.as_json)
     else
-      json_response(chat_application.errors, :unprocessable_entity)
+      json_response(errors: chat_application.errors, :unprocessable_entity)
     end
   end
 

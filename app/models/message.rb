@@ -3,6 +3,7 @@ class Message < ApplicationRecord
   belongs_to :chat
   after_create :update_messages_count
   after_destroy :update_messages_count
+  validates :body, presence: true
 
 
   settings index: { number_of_shards: 1 } do
@@ -43,5 +44,5 @@ class Message < ApplicationRecord
     Sidekiq::Client.enqueue_to('low', MessageWorker, self.chat_id)
   end
 end
-Message.import
+Message.import force: true
 

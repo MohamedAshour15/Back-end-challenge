@@ -9,7 +9,7 @@ class Api::V1::ChatsController < ApplicationController
       Sidekiq::Client.enqueue_to('high', ChatCreateWorker, params[:chat_application_token], chat_number, @chat_application.id)
       json_response({number: chat_number})
     else
-      json_response(@chat.errors, status: :unprocessable_entity)
+      json_response(errors: @chat.errors, status: :unprocessable_entity)
     end
   end
 
