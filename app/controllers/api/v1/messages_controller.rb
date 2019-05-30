@@ -10,7 +10,7 @@ class Api::V1::MessagesController < ApplicationController
           params[:chat_number], message_number, @chat.id, 'create', params[:body])
       json_response({number: message_number})
     else
-      json_response(errors: @message.errors, status: :unprocessable_entity)
+      json_response({errors: @message.errors}, :unprocessable_entity)
     end
   end
 

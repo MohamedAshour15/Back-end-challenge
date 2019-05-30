@@ -67,7 +67,7 @@ class Api::V1::ChatApplicationsController < ApplicationController
     if chat_application.save
       json_response(chat_application.as_json)
     else
-      json_response(errors: chat_application.errors, :unprocessable_entity)
+      json_response({errors: chat_application.errors}, :unprocessable_entity)
     end
   end
 
@@ -76,10 +76,10 @@ class Api::V1::ChatApplicationsController < ApplicationController
   end
 
   def update
-    if @chat_application.update(@chat_application_params)
+    if @chat_application.update(chat_application_params)
       json_response(@chat_application.as_json)
     else
-      json_response(@chat_application.errors, :unprocessable_entity)
+      json_response({errors: @chat_application.errors}, :unprocessable_entity)
     end
   end
 
@@ -90,7 +90,7 @@ class Api::V1::ChatApplicationsController < ApplicationController
   private
 
   def chat_application_params
-    params.permit(:token, :name)
+    params.permit(:name)
   end
 
   def set_chat_application
