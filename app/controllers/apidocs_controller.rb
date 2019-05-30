@@ -20,7 +20,11 @@ class ApidocsController < ActionController::Base
   # A list of all classes that have swagger_* declarations.
   SWAGGERED_CLASSES = [
       Api::V1::ChatApplicationsController,
+      Api::V1::MessagesController,
+      Api::V1::ChatsController,
       ChatApplication,
+      Message,
+      Chat,
       self,
   ].freeze
 

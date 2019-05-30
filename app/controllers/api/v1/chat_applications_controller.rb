@@ -19,11 +19,8 @@ class Api::V1::ChatApplicationsController < ApplicationController
       response 200 do
         key :description, "Returns it's token"
       end
-      response 404 do
-        key :description, 'unexpected error'
-        schema do
-          property :errors, type: :string, example: 'Fail'
-        end
+      response 422 do
+        key :description, 'Unprocessable entity'
       end
     end
   end
@@ -38,7 +35,7 @@ class Api::V1::ChatApplicationsController < ApplicationController
       parameter do
         key :name, :token
         key :in, :path
-        key :description, 'ID of contractor user'
+        key :description, 'Application token'
         key :required, true
         key :type, :string
       end
@@ -46,7 +43,7 @@ class Api::V1::ChatApplicationsController < ApplicationController
         key :name, :body
         key :in, :body
         schema do
-          key :'$ref', :update_chat_application
+          key :'$ref', :chat_application
         end
         key :required, false
       end
@@ -54,10 +51,30 @@ class Api::V1::ChatApplicationsController < ApplicationController
         key :description, 'Chat application successfully updated'
       end
       response 404 do
-        key :description, 'unexpected error'
-        schema do
-          property :errors, type: :string, example: 'Fail'
-        end
+        key :description, 'Not found'
+      end
+    end
+  end
+
+  swagger_path '/api/v1/chat_applications/{token}' do
+    operation :get do
+      key :summary, 'Get application'
+      key :description, "Get application by token"
+      key :tags, [
+        'ChatApplications'
+      ]
+      parameter do
+        key :name, :token
+        key :in, :path
+        key :description, 'Application token'
+        key :required, true
+        key :type, :string
+      end
+      response 200 do
+        key :description, 'Chat application successfully retrieved'
+      end
+      response 404 do
+        key :description, 'Not found'
       end
     end
   end

@@ -5,6 +5,22 @@ class Message < ApplicationRecord
   after_destroy :update_messages_count
   validates :body, presence: true
 
+  swagger_schema :message do
+    property :body do
+      key :type, :string
+    end
+    property :number do
+      key :type, :integer
+      key :minimum, 1
+    end
+    property :chat_application_token do
+      key :type, :string
+    end
+    property :chat_number do
+      key :type, :integer
+      key :minimum, 1
+    end
+  end
 
   settings index: { number_of_shards: 1 } do
     mapping dynamic: 'false' do

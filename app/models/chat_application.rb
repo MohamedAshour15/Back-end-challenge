@@ -3,8 +3,7 @@ class ChatApplication < ApplicationRecord
   has_many :chats, dependent: :destroy
   validates :name, presence: true
 
-  swagger_schema :create_chat_application do
-    key :required, [:name]
+  swagger_schema :chat_application do
     property :name do
       key :type, :string
     end
@@ -12,21 +11,6 @@ class ChatApplication < ApplicationRecord
       key :type, :string
     end
     property :chats_count do
-      key :type, :integer
-    end
-  end
-
-  swagger_schema :update_chat_application do
-    property :name do
-      key :type, :string
-    end
-    property :token do
-      key :type, :string
-    end
-    property :chats_count do
-      key :type, :integer
-    end
-    property :number do
       key :type, :integer
     end
   end

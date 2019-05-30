@@ -3,6 +3,164 @@ class Api::V1::MessagesController < ApplicationController
   before_action :set_message, only: [:show, :update]
   before_action :check_if_chat_exists, only: [:create, :index]
 
+  swagger_path '/api/v1/chat_applications/{chat_application_token}/chats/{chat_number}' do
+    operation :post do
+      key :summary, 'Create a message'
+      key :description, "Create a message to the corresponding chat"
+      key :tags, [
+        'Messages'
+      ]
+      parameter do
+        key :name, :Body
+        key :in, :path
+        key :description, 'Body of the message'
+        key :required, true
+        key :type, :string
+      end
+      parameter do
+        key :name, :chat_application_token
+        key :in, :path
+        key :description, 'Application token'
+        key :required, true
+        key :type, :string
+      end  
+      parameter do
+        key :name, :chat_number
+        key :in, :path
+        key :description, 'Chat number'
+        key :required, true
+        key :type, :string
+      end
+      response 200 do
+        key :description, "Message successfully created"
+      end
+      response 422 do
+        key :description, 'Unprocessable entity'
+      end
+      response 404 do
+        key :description, 'Chat not found'
+      end
+    end
+  end
+
+  swagger_path '/api/v1/chat_applications/{chat_application_token}/chats/{chat_number}/messages/{number}' do
+    operation :put do
+      key :summary, 'Updates the message'
+      key :description, "Updates the message found by chat application token, chat number and its number"
+      key :tags, [
+        'Messages'
+      ]
+      parameter do
+        key :name, :chat_application_token
+        key :in, :path
+        key :description, 'Application token'
+        key :required, true
+        key :type, :string
+      end  
+      parameter do
+        key :name, :chat_number
+        key :in, :path
+        key :description, 'Chat number'
+        key :required, true
+        key :type, :integer
+      end
+     parameter do
+        key :name, :number
+        key :in, :path
+        key :description, 'Message number'
+        key :required, true
+        key :type, :integer
+      end
+      parameter do
+        key :name, :body
+        key :in, :body
+        schema do
+          key :'$ref', :message
+        end
+        key :required, true
+      end
+      response 200 do
+        key :description, 'Message successfully updated'
+      end
+      response 404 do
+        key :description, 'Not found'
+      end
+    end
+  end
+
+  swagger_path '/api/v1/chat_applications/{chat_application_token}/chats/{chat_number}/messages/{number}' do
+    operation :get do
+      key :summary, 'Gets the message'
+      key :description, "Gets the message found by chat application token, chat number and its number"
+      key :tags, [
+        'Messages'
+      ]
+      parameter do
+        key :name, :chat_application_token
+        key :in, :path
+        key :description, 'Application token'
+        key :required, true
+        key :type, :string
+      end  
+      parameter do
+        key :name, :chat_number
+        key :in, :path
+        key :description, 'Chat number'
+        key :required, true
+        key :type, :integer
+      end
+     parameter do
+        key :name, :number
+        key :in, :path
+        key :description, 'Message number'
+        key :required, true
+        key :type, :integer
+      end
+      response 200 do
+        key :description, 'Message successfully retrieved'
+      end
+      response 404 do
+        key :description, 'Not found'
+      end
+    end
+  end
+
+  swagger_path '/api/v1/chat_applications/{chat_application_token}/chats/{chat_number}/messages' do
+    operation :get do
+      key :summary, 'Gets all messages or by query'
+      key :description, "Gets all messages that matches the query body and returns all messages if query is not entered"
+      key :tags, [
+        'Messages'
+      ]
+      parameter do
+        key :name, :chat_application_token
+        key :in, :path
+        key :description, 'Application token'
+        key :required, true
+        key :type, :string
+      end  
+      parameter do
+        key :name, :chat_number
+        key :in, :path
+        key :description, 'Chat number'
+        key :required, true
+        key :type, :integer
+      end
+      parameter do
+        key :name, :query
+        key :in, :query
+        key :type, :string
+      end
+      response 200 do
+        key :description, 'Message(s) successfully retrieved'
+      end
+      response 404 do
+        key :description, 'Not found'
+      end
+    end
+  end
+
+
   def create
     if (@message = Message.new(message_params)).valid?
       message_number = Rails.cache.redis.incr("#{params[:chat_application_token]}_#{params[:chat_number]}_message_number")
